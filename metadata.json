@@ -3,7 +3,7 @@
     "Slug": "biogpt-embeddings",
     "Status": "Ready",
     "Title": "BioGPT embeddings",
-    "Description": "BioGPT is a pre-trained transformer for biomedical text. This domain-specific model has been trained on large-scale biomedical literature. This model produces numerical embeddings based on BioGPT.",
+    "Description": "BioGPT is a pre-trained transformer for biomedical text. This domain-specific model has been trained on large-scale biomedical literature. In this implementation, we use BioGPT to generate numerical embeddings for bioassay and other biomedical texts.",
     "Mode": "Pretrained",
     "Task": ["Representation"],
     "Input": ["Text"],
