@@ -8,7 +8,6 @@ from bentoml.service import BentoServiceArtifact
 import pickle
 import os
 import shutil
-import collections
 import tempfile
 import subprocess
 import csv
@@ -28,21 +27,6 @@ def Float(x):
         return float(x)
     except:
         return None
-
-
-def String(x):
-    x = str(x)
-    if not x:
-        return None
-    if x == "nan":
-        return None
-    if x == "null":
-        return None
-    if x == "False":
-        return None
-    if x == "None":
-        return None
-    return x
 
 
 class Model(object):
@@ -91,7 +75,7 @@ class Model(object):
             for r in reader:
                 R += [
                     {"outcome": [Float(x) for x in r]}
-                ]  # <-- EDIT: Modify according to type of output (Float, String...)
+                ]
         meta = {"outcome": h}
         result = {"result": R, "meta": meta}
         shutil.rmtree(tmp_folder)
