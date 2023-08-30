@@ -1,9 +1,9 @@
 {
-    "Identifier": "",
-    "Slug": "",
-    "Status": "",
-    "Title": "",
-    "Description": "",
+    "Identifier": "eos1xje",
+    "Slug": "biogpt-embeddings",
+    "Status": "In progress",
+    "Title": "BioGPT embeddings",
+    "Description": "BioGPT is a pre-trained transformer for biomedical text. This domain-specific model has been trained on large-scale biomedical literature. This model produces numerical embeddings based on BioGPT.",
     "Mode": "",
     "Task": [],
     "Input": [],
@@ -12,8 +12,10 @@
     "Output Type": [],
     "Output Shape": "",
     "Interpretation": "",
-    "Tag": [],
-    "Publication": "",
-    "Source Code": "",
-    "License": ""
+    "Tag": [
+        "Embedding"
+    ],
+    "Publication": "https://academic.oup.com/bib/article/23/6/bbac409/6713511?guestAccessKey=a66d9b5d-4f83-4017-bb52-405815c907b9&login=false",
+    "Source Code": "https://github.com/microsoft/biogpt",
+    "License": "MIT"
 }
