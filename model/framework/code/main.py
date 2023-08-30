@@ -2,8 +2,10 @@
 import os
 import csv
 import sys
-from rdkit import Chem
-from rdkit.Chem.Descriptors import MolWt
+
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import numpy as np
 
 # parse arguments
 input_file = sys.argv[1]
@@ -13,27 +15,37 @@ output_file = sys.argv[2]
 root = os.path.dirname(os.path.abspath(__file__))
 
 # my model
-def my_model(smiles_list):
-    return [MolWt(Chem.MolFromSmiles(smi)) for smi in smiles_list]
+class BioGPTEmbedder(object):
+    def __init__(self):
+        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/biogpt")
+        self.model = AutoModelForCausalLM.from_pretrained("microsoft/biogpt")
 
+    def calculate(self, text_inputs):
+        X = np.zeros((len(text_inputs), 1024), dtype=np.float32)
+        for i, text in enumerate(text_inputs):
+            encoded_input = self.tokenizer(text, return_tensors="pt")
+            with torch.no_grad():
+                hidden_states = self.model.base_model(**encoded_input).last_hidden_state
+            mean_encoding = torch.mean(hidden_states, dim=1)
+            mean_encoding_np = mean_encoding.numpy()
+            X[i, :] = mean_encoding_np
+        return X
 
-# read SMILES from .csv file, assuming one column with header
+# read text from .csv file, assuming one column with header
 with open(input_file, "r") as f:
-    reader = csv.reader(f)
-    next(reader)  # skip header
-    smiles_list = [r[0] for r in reader]
+    next(f)
+    text_list = []
+    for l in f:
+        text_list += [l.rstrip("\n")]
 
 # run model
-outputs = my_model(smiles_list)
-
-#check input and output have the same lenght
-input_len = len(smiles_list)
-output_len = len(outputs)
-assert input_len == output_len
+model = BioGPTEmbedder()
+X = model.calculate(text_list)
 
 # write output in a .csv file
+columns = ["f-{0}".format(i) for i in range(X.shape[1])]
 with open(output_file, "w") as f:
     writer = csv.writer(f)
-    writer.writerow(["value"])  # header
-    for o in outputs:
-        writer.writerow([o])
+    writer.writerow(columns)  # header
+    for i in range(X.shape[0]):
+        writer.writerow(list(X[i,:]))
